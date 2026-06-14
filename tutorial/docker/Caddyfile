@@ -1,0 +1,19 @@
+# Caddy reverse proxy for production TLS termination.
+#
+# SITE_ADDRESS controls the listener:
+#   - Set to a domain (e.g. "tutorial.example.com") -> Caddy auto-provisions
+#     and renews a Let's Encrypt / ZeroSSL certificate (requires ports 80+443
+#     reachable from the internet and DNS pointing at this host).
+#   - Leave unset -> listens on :80 (plain HTTP) for local/internal use.
+#
+# Everything is proxied to the frontend container, whose nginx serves the SPA
+# and forwards /api/ to the API container.
+
+{$SITE_ADDRESS::80} {
+	encode zstd gzip
+
+	reverse_proxy frontend:80 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+	}
+}

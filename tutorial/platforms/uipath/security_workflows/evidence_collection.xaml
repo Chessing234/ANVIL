@@ -1,0 +1,9 @@
+<Activity x:Class="Main" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Sequence DisplayName="EvidenceCollection_Tutorial">
+    <WriteLine Text="[CHAIN] acquire evidence with signed hash manifest" />
+    <WriteLine Text="[TRANSFER] secure copy to evidence vault" />
+    <WriteLine Text="[VERIFY] integrity re-hash and custody log append" />
+    <WriteLine Text="[TUTORIAL] publish EVIDENCE_COLLECTED to message bus" />
+  </Sequence>
+</Activity>

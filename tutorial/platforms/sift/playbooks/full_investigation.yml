@@ -1,0 +1,29 @@
+name: "Full Investigation"
+description: "Master orchestrator across triage, memory, disk, and network playbooks"
+steps:
+  - name: Run_Triage
+    tool: playbook
+    playbook_ref: triage.yml
+    timeout: 900
+    on_error: skip
+
+  - name: Run_Memory
+    tool: playbook
+    playbook_ref: memory_analysis.yml
+    timeout: 900
+    depends_on: ["Run_Triage"]
+    on_error: skip
+
+  - name: Run_Disk
+    tool: playbook
+    playbook_ref: disk_analysis.yml
+    timeout: 1200
+    depends_on: ["Run_Triage"]
+    on_error: skip
+
+  - name: Run_Network
+    tool: playbook
+    playbook_ref: network_analysis.yml
+    timeout: 600
+    depends_on: ["Run_Triage"]
+    on_error: skip

@@ -1,0 +1,36 @@
+name: "Disk Analysis"
+description: "Partitioning, file system, and deleted artifact recovery"
+steps:
+  - name: Partition_Map
+    tool: sleuthkit
+    plugin: mmls
+    timeout: 120
+    on_error: retry_once
+
+  - name: Live_Files
+    tool: sleuthkit
+    plugin: fls
+    timeout: 300
+    depends_on: ["Partition_Map"]
+    on_error: skip
+
+  - name: Fs_Meta
+    tool: sleuthkit
+    plugin: fsstat
+    timeout: 120
+    depends_on: ["Partition_Map"]
+    on_error: skip
+
+  - name: Timeline_Prep
+    tool: plaso
+    plugin: log2timeline
+    timeout: 600
+    depends_on: ["Live_Files"]
+    on_error: skip
+
+  - name: Timeline_Sort
+    tool: plaso
+    plugin: psort
+    timeout: 400
+    depends_on: ["Timeline_Prep"]
+    on_error: skip

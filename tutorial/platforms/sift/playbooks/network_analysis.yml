@@ -1,0 +1,22 @@
+name: "Network Analysis"
+description: "PCAP summarization and suspicious traffic heuristics"
+steps:
+  - name: Protocol_Stats
+    tool: tshark
+    plugin: ""
+    timeout: 180
+    on_error: retry_once
+
+  - name: DNS_Focus
+    tool: tshark
+    plugin: dns
+    timeout: 180
+    depends_on: ["Protocol_Stats"]
+    on_error: skip
+
+  - name: TCP_Conversations
+    tool: tshark
+    plugin: tcp.flags.syn==1
+    timeout: 180
+    depends_on: ["Protocol_Stats"]
+    on_error: skip

@@ -1,0 +1,53 @@
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  json:
+    "()": structlog.stdlib.ProcessorFormatter
+    foreign_pre_chain:
+      - structlog.contextvars.merge_contextvars
+      - structlog.stdlib.add_log_level
+      - structlog.stdlib.add_logger_name
+      - structlog.stdlib.PositionalArgumentsFormatter
+      - structlog.processors.TimeStamper:
+          fmt: "iso"
+          utc: true
+      - structlog.processors.StackInfoRenderer
+      - structlog.processors.format_exc_info
+      - structlog.processors.UnicodeDecoder
+    processors:
+      - structlog.stdlib.ProcessorFormatter.remove_processors_meta
+      - structlog.processors.JSONRenderer()
+
+  console:
+    "()": structlog.stdlib.ProcessorFormatter
+    foreign_pre_chain:
+      - structlog.contextvars.merge_contextvars
+      - structlog.stdlib.add_log_level
+      - structlog.stdlib.add_logger_name
+      - structlog.processors.TimeStamper:
+          fmt: "%Y-%m-%d %H:%M:%S"
+          utc: false
+    processors:
+      - structlog.stdlib.ProcessorFormatter.remove_processors_meta
+      - structlog.dev.ConsoleRenderer(colors=true)
+
+handlers:
+  default:
+    class: logging.StreamHandler
+    formatter: json
+    level: INFO
+    stream: ext://sys.stdout
+
+loggers:
+  tutorial:
+    level: INFO
+    handlers: [default]
+    propagate: false
+  asyncio:
+    level: WARNING
+    propagate: true
+
+root:
+  level: INFO
+  handlers: [default]

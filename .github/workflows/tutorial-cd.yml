@@ -1,0 +1,43 @@
+name: Tutorial CD
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "GitHub Environment name"
+        required: true
+        default: "production"
+      image_tag:
+        description: "Container tag to deploy"
+        required: true
+
+concurrency:
+  group: tutorial-cd-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Manual deploy gate
+        run: |
+          echo "Deploy only images that passed Tutorial CI."
+          echo "Tag: ${{ github.event.inputs.image_tag }}"
+          echo "Environment: ${{ github.event.inputs.environment }}"
+
+  deploy:
+    needs: gate
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    defaults:
+      run:
+        working-directory: tutorial
+    steps:
+      - uses: actions/checkout@v4
+      - name: Platform deploy (replace with your provider)
+        env:
+          IMAGE_TAG: ${{ github.event.inputs.image_tag }}
+        run: |
+          echo "Wire kubectl, flyctl, railway, or ECS here."
+          echo "See tutorial/docs/DEPLOYMENT.md for env vars and compose."

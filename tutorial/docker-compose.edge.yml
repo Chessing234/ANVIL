@@ -1,0 +1,36 @@
+# Edge / ARM64 single-node stack (classroom kit, field SOC). Build on Apple Silicon or ARM CI:
+#   docker compose -f docker-compose.edge.yml build
+services:
+  edge-api:
+    platform: linux/arm64
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.edge
+    ports:
+      - "8000:8000"
+    environment:
+      TUTORIAL_DATABASE__URL: sqlite:///data/tutorial.db
+      TUTORIAL_ORCHESTRATION__PERSISTENCE_DB_PATH: /app/data/orchestration.db
+      TUTORIAL_ORCHESTRATION__DEFENSE_CHECKPOINT_DB: /app/data/checkpoints_defense.sqlite
+      TUTORIAL_ORCHESTRATION__TEACHING_CHECKPOINT_DB: /app/data/checkpoints_teaching.sqlite
+      TUTORIAL_STATE_MACHINE__CHECKPOINT_PATH: /app/data/state_checkpoints.sqlite
+      TUTORIAL_MCP__REGISTRY_CACHE_PATH: /app/data/mcp_registry.sqlite
+      TUTORIAL_API__EVIDENCE_UPLOAD_DIR: /app/data/evidence_uploads
+    volumes:
+      - edge_data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/v1/system/health')",
+        ]
+      interval: 45s
+      timeout: 10s
+      retries: 3
+      start_period: 50s
+
+volumes:
+  edge_data:

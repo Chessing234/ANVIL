@@ -1,0 +1,10 @@
+<Activity x:Class="Main" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Sequence DisplayName="LessonGeneration_Tutorial">
+    <WriteLine Text="[INPUT] investigation narrative + student profile" />
+    <WriteLine Text="[TUTORIAL] narrative agent: storyline" />
+    <WriteLine Text="[TUTORIAL] sandbox agent: exercises" />
+    <WriteLine Text="[TUTORIAL] curriculum + personalization" />
+    <WriteLine Text="[OUTPUT] lesson package + student notification queue item" />
+  </Sequence>
+</Activity>

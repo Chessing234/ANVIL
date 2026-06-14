@@ -1,0 +1,34 @@
+name: "Memory Analysis"
+description: "Memory-only forensic playbook"
+steps:
+  - name: PsList
+    tool: volatility
+    plugin: windows.pslist
+    output_format: json
+    timeout: 120
+    on_error: retry_once
+
+  - name: NetScan
+    tool: volatility
+    plugin: windows.netscan
+    output_format: json
+    timeout: 120
+    depends_on: ["PsList"]
+    on_error: skip
+
+  - name: MalFind
+    tool: volatility
+    plugin: windows.malfind
+    output_format: json
+    timeout: 300
+    depends_on: ["PsList"]
+    condition: "previous.suspicious_processes > 0"
+    on_error: skip
+
+  - name: CmdLine
+    tool: volatility
+    plugin: windows.cmdline
+    output_format: json
+    timeout: 180
+    depends_on: ["PsList"]
+    on_error: skip

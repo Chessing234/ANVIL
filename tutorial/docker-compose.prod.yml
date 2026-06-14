@@ -1,0 +1,58 @@
+# Production overlay: automatic HTTPS (Caddy), restart policies, log rotation.
+#
+# Usage:
+#   export SITE_ADDRESS=tutorial.example.com   # your domain (DNS -> this host)
+#   export TLS_EMAIL=ops@example.com           # optional, for cert notices
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#
+# Requires Docker Compose v2.24+ (for the `!reset` tag that drops the frontend's
+# directly published port so Caddy can own 80/443).
+
+services:
+  api:
+    # Reach the API over TLS at https://$SITE_ADDRESS/api/ (via Caddy -> frontend
+    # -> api). No direct host port in production so nothing is served plaintext.
+    ports: !reset []
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  frontend:
+    # Caddy fronts the stack in production; don't publish the frontend directly.
+    ports: !reset []
+    restart: always
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: always
+    depends_on:
+      frontend:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-:80}
+      TLS_EMAIL: ${TLS_EMAIL:-}
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+volumes:
+  caddy_data:
+  caddy_config:

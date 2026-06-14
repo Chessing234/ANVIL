@@ -1,0 +1,41 @@
+name: "SIFT Triage"
+description: "Initial assessment, integrity, and quick volatile-artifact survey"
+steps:
+  - name: Determine_Evidence_Types
+    tool: shell
+    plugin: echo "evidence_bundle_ready"
+    timeout: 30
+    on_error: skip
+
+  - name: Calculate_Integrity_Hash
+    tool: shell
+    plugin: echo "{\"sha256\":\"ab\"}"
+    timeout: 30
+    depends_on: ["Determine_Evidence_Types"]
+    output_format: json
+    on_error: retry_once
+
+  - name: List_Processes
+    tool: volatility
+    plugin: windows.pslist
+    output_format: json
+    timeout: 120
+    depends_on: ["Calculate_Integrity_Hash"]
+    on_error: retry_once
+
+  - name: Network_Snapshot
+    tool: volatility
+    plugin: windows.netscan
+    output_format: json
+    timeout: 120
+    depends_on: ["List_Processes"]
+    on_error: skip
+
+  - name: Malware_Hunt
+    tool: volatility
+    plugin: windows.malfind
+    output_format: json
+    timeout: 300
+    depends_on: ["List_Processes"]
+    condition: "previous.suspicious_processes > 0"
+    on_error: skip

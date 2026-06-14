@@ -1,0 +1,14 @@
+<Activity x:Class="Main" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Sequence DisplayName="IncidentResponse_Tutorial">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="incidentId" />
+      <Variable x:TypeArguments="x:String" Default="[]" Name="evidencePaths" />
+    </Sequence.Variables>
+    <WriteLine Text="[TUTORIAL] Triage: validate incident and SLA" />
+    <WriteLine Text="[TUTORIAL] Investigation agents: memory, disk, network" />
+    <WriteLine Text="[TUTORIAL] Containment: human approval gate for isolation" />
+    <WriteLine Text="[TUTORIAL] Remediation: patch and verify" />
+    <WriteLine Text="[TUTORIAL] Report + optional lesson generation" />
+  </Sequence>
+</Activity>

@@ -1,0 +1,45 @@
+name: CD
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "GitHub Environment name (must exist in repo settings)"
+        required: true
+        default: "production"
+      image_tag:
+        description: "Container tag to deploy (e.g. sha-abcdef1 or v0.1.0)"
+        required: true
+
+concurrency:
+  group: tutorial-cd-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  gate:
+    name: Require passing CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Block until CI green (manual gate)
+        run: |
+          echo "CD is intentionally manual: merge only after CI passes on main."
+          echo "Image tag requested: ${{ github.event.inputs.image_tag }}"
+          echo "Target environment: ${{ github.event.inputs.environment }}"
+
+  deploy:
+    needs: gate
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy placeholder (wire your platform)
+        env:
+          IMAGE_TAG: ${{ github.event.inputs.image_tag }}
+        run: |
+          echo "Replace this step with your deploy provider (Fly.io, Railway, ECS, GKE, etc.)."
+          echo "Typical pattern: pull pre-built images tagged ${IMAGE_TAG}, run migrations, rolling restart."
+          echo "Required runtime env vars are documented in docs/DEPLOYMENT.md."

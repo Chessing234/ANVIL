@@ -1,0 +1,9 @@
+<Activity x:Class="Main" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Sequence DisplayName="ThreatHunting_Tutorial">
+    <WriteLine Text="[INPUT] hypothesis and search parameters" />
+    <WriteLine Text="[SPLUNK] pull candidate events via Orchestrator asset" />
+    <WriteLine Text="[TUTORIAL] hypothesis testing and scoring" />
+    <WriteLine Text="[OUTPUT] findings JSON to SecurityIncidents queue" />
+  </Sequence>
+</Activity>

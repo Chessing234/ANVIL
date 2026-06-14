@@ -1,0 +1,11 @@
+# Local Python env (never commit)
+.venv/
+
+# macOS
+.DS_Store
+
+# Runtime artifacts at monorepo root
+*.db
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

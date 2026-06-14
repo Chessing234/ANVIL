@@ -1,0 +1,82 @@
+# Build the TUTORIAL SPA from tutorial/frontend and deploy to GitHub Pages.
+#
+# Prerequisite: enable Pages with source "GitHub Actions" (Settings → Pages).
+#
+# Configure your live API (GitHub cannot host the FastAPI backend):
+#   Repository variable: TUTORIAL_PAGES_API_URL  e.g. https://api.example.com/api/v1
+#   Repository secret (optional): TUTORIAL_PAGES_API_KEY  → passed as VITE_API_KEY at build time
+#
+# CORS: allow your Pages origin on the API (TUTORIAL_API__CORS_ALLOW_ORIGINS).
+
+name: Tutorial — GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "tutorial/frontend/**"
+      - ".github/workflows/tutorial-github-pages.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: tutorial-pages-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: tutorial/frontend/package-lock.json
+
+      - name: Compute Vite base path for GitHub Pages
+        id: pages_base
+        shell: bash
+        run: |
+          repo="${GITHUB_REPOSITORY##*/}"
+          if [[ "$repo" == *.github.io ]]; then
+            echo "base=/" >> "$GITHUB_OUTPUT"
+            echo "Using root base (user or org site from \`*.github.io\` repo)."
+          else
+            echo "base=/${repo}/" >> "$GITHUB_OUTPUT"
+            echo "Using project base: /${repo}/"
+          fi
+
+      - name: Install and build
+        working-directory: tutorial/frontend
+        env:
+          VITE_BASE_PATH: ${{ steps.pages_base.outputs.base }}
+          VITE_API_URL: ${{ vars.TUTORIAL_PAGES_API_URL }}
+          VITE_API_KEY: ${{ secrets.TUTORIAL_PAGES_API_KEY }}
+        run: |
+          npm ci
+          npm run build
+          cp dist/index.html dist/404.html
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: tutorial/frontend/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
