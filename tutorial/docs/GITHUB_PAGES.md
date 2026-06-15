@@ -40,9 +40,16 @@ Tunnel, etc.) over **HTTPS**.
 
    JSON array format matches `config/settings.py`.
 
-4. **Merge to `main` (or `master`)** or run the workflow manually:
+### One-command wiring (GitHub CLI)
 
-   **Actions** → **Tutorial — GitHub Pages** → **Run workflow**.
+After the API is live, from ``tutorial/``:
+
+```bash
+./scripts/gh-wire-pages-api.sh https://YOUR-API-HOST/api/v1 YOUR_X_API_KEY
+```
+
+This sets ``TUTORIAL_PAGES_API_URL``, optionally ``TUTORIAL_PAGES_API_KEY``, and
+re-runs the Pages workflow. Override the repo with ``REPO=owner/name``.
 
 ## URLs
 

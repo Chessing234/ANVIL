@@ -48,6 +48,8 @@ COPY api ./api
 COPY tutorial ./tutorial
 COPY main.py .
 
+RUN mkdir -p /app/data/evidence_uploads
+
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
