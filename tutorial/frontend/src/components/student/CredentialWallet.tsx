@@ -151,7 +151,7 @@ export function CredentialWallet() {
                   </div>
                   <p className="mt-2">
                     In production this calls your attestation registry. Here we simulate a successful Merkle inclusion check
-                    for judge demos.
+                    for demonstration purposes.
                   </p>
                 </div>
               </div>

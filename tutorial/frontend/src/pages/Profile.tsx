@@ -39,7 +39,7 @@ export function Profile() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold text-indigo-50">Profile</h1>
-        <p className="mt-1 text-indigo-200/85">XP, streaks, achievements, and knowledge graph—optimized for judge demos.</p>
+        <p className="mt-1 text-indigo-200/85">XP, streaks, achievements, and knowledge graph—all in one place.</p>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">

@@ -159,7 +159,7 @@ function lessonBlocksFor(id: string): LessonDefinition["blocks"] {
       title: "Introduction",
       paragraphs: [
         "This lesson adapts real SOC workflows into a classroom-safe narrative.",
-        "Use hints sparingly—DSH Hacks judges love self-driven discovery.",
+        "Use hints sparingly—self-driven discovery builds deeper intuition.",
       ],
       dialogues: [{ speaker: "Coach", text: "Read twice, click once." }],
       glossary: {

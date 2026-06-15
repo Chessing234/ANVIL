@@ -26,7 +26,7 @@ async def get_investigation_steps(incident_id: uuid.UUID, db: DbSession, _: Curr
 
 @router.get("/{incident_id}/self-corrections", response_model=list[InvestigationStepResponse])
 async def get_self_corrections(incident_id: uuid.UUID, db: DbSession, _: CurrentUser) -> list[InvestigationStepResponse]:
-    """Return self-correction steps for FIND EVIL! reporting."""
+    """Return self-correction steps for accuracy reporting."""
     if await incidents_crud.get_by_id(db, incident_id) is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Incident not found")
     steps = await inv_crud.get_self_corrections(db, incident_id)

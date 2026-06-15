@@ -63,7 +63,7 @@ export function InvestigationTimeline({ steps, onSelectStep }: InvestigationTime
       <CardHeader>
         <CardTitle>Investigation timeline</CardTitle>
         <p className="text-sm text-slate-400">
-          Flow from intake through agent actions. Self-corrections use amber emphasis for FIND EVIL! demos.
+          Flow from intake through agent actions. Self-corrections use amber emphasis for clarity.
         </p>
       </CardHeader>
       <CardContent>

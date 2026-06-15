@@ -44,5 +44,5 @@ def orm_incident_to_shared(row: dbm.Incident) -> SharedIncident:
 
 
 def demo_credential_hash(student_id: uuid.UUID) -> str:
-    """Deterministic pseudo-chain digest for hackathon demos."""
+    """Deterministic pseudo-chain digest for credential demos."""
     return uuid.uuid5(uuid.NAMESPACE_URL, f"tutorial:credential:{student_id}").hex

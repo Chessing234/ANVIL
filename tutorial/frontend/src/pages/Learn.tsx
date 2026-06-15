@@ -54,7 +54,7 @@ export function Learn() {
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-indigo-50">Learn</h1>
         <p className="mt-1 max-w-2xl text-indigo-200/85">
-          Gamified cyber curriculum tuned for DSH Hacks, USAII Global AI, and ML Empowerment scoreboards—pick a track and
+          Gamified cyber curriculum that turns real SOC workflows into hands-on lessons—pick a track and
           ship evidence-backed wins.
         </p>
       </div>
@@ -142,7 +142,7 @@ export function Learn() {
 
       <section className="space-y-3">
         <h2 className="text-xl font-semibold text-indigo-50">Trending from real incidents</h2>
-        <p className="text-sm text-indigo-200/80">Labs tagged with live SOC telemetry remixes—perfect for judge walkthroughs.</p>
+        <p className="text-sm text-indigo-200/80">Labs tagged with live SOC telemetry remixes—perfect for hands-on practice.</p>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {trending.map((l) => (
             <LessonCard key={l.id} lesson={l} />

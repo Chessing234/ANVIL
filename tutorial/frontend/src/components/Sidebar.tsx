@@ -25,7 +25,7 @@ export function Sidebar() {
         </div>
         <div>
           <div className="text-sm font-semibold tracking-tight">TUTORIAL SOC</div>
-          <div className="text-xs text-slate-500">FIND EVIL! Ops</div>
+          <div className="text-xs text-slate-500">Security Operations</div>
         </div>
       </div>
       <Separator />
@@ -64,7 +64,7 @@ export function Sidebar() {
         </NavLink>
       </nav>
       <div className="border-t border-slate-800 p-4 text-xs text-slate-500">
-        Splunk · UiPath · LangGraph-ready telemetry surface.
+        Real-time, agent-driven telemetry surface.
       </div>
     </aside>
   );

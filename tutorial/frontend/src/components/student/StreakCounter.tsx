@@ -16,7 +16,7 @@ export function StreakCounter({ days }: StreakCounterProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="text-sm text-amber-100/90">
-        <p>Log learning sessions daily to multiply XP bonuses for DSH Hacks and USAII showcases.</p>
+        <p>Log learning sessions daily to multiply XP bonuses and climb the leaderboard.</p>
       </CardContent>
     </Card>
   );

@@ -9,7 +9,7 @@ export const CREDENTIAL_CATALOG: CredentialItem[] = [
     score: 96,
     tokenId: "0x7a3f…c91",
     chain: "Tutorial L2",
-    badges: ["FIND EVIL!", "SOC-200"],
+    badges: ["DFIR", "SOC-200"],
   },
   {
     id: "cred-2",
@@ -29,7 +29,7 @@ export const CREDENTIAL_CATALOG: CredentialItem[] = [
     score: 88,
     tokenId: "0xcc10…441",
     chain: "Tutorial L2",
-    badges: ["Integrity", "USAII"],
+    badges: ["Integrity", "Crypto-101"],
   },
   {
     id: "cred-4",
@@ -39,6 +39,6 @@ export const CREDENTIAL_CATALOG: CredentialItem[] = [
     score: 94,
     tokenId: "0x91aa…102",
     chain: "Tutorial L2",
-    badges: ["DSH Hacks", "Human-centric"],
+    badges: ["Phishing-IR", "Human-centric"],
   },
 ];

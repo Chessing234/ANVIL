@@ -13,7 +13,6 @@ from config.constants import IncidentSeverity
 from core.message_bus import MessageBus
 from shared.models import (
     ContainmentSafetyLevel,
-    Evidence,
     Hypothesis,
     Incident,
     InvestigationResult,

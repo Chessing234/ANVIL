@@ -45,7 +45,7 @@ export function Settings() {
       <div>
         <h1 className="text-2xl font-semibold text-slate-50">System settings</h1>
         <p className="text-sm text-slate-400">
-          Override API base URL and API key for Splunk / UiPath demos. Values persist in <code>localStorage</code> and
+          Override the API base URL and API key to point the dashboard at your backend. Values persist in <code>localStorage</code> and
           take effect on the next request.
         </p>
       </div>

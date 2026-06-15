@@ -37,9 +37,7 @@ jobs:
       - name: Install Python dependencies
         run: pip install -e ".[dev]"
       - name: Ruff
-        run: >-
-          ruff check tutorial/ api/ database/ orchestration/ config/ core/
-          integrations/ agents/ knowledge/ platforms/ events/ shared/ scripts/
+        run: ruff check .
       - name: Mypy (tutorial package)
         run: mypy tutorial/
       - name: Pytest with coverage

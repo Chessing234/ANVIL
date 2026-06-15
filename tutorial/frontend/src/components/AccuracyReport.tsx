@@ -47,7 +47,7 @@ export function AccuracyReport({ report }: AccuracyReportProps) {
         <div>
           <CardTitle className="flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-emerald-400" />
-            FIND EVIL! accuracy
+            Investigation accuracy
           </CardTitle>
           <p className="text-sm text-slate-400">Heuristic scoring derived from investigation telemetry.</p>
         </div>

@@ -126,10 +126,10 @@ async def sync_defense_and_teach_post_submit(
         step.setdefault("interpretation", step.get("interpretation") or "")
         if step.get("is_self_correction"):
             if corr_idx < len(corrections):
-                step["correction_reason"] = str(corrections[corr_idx].get("reason", "FIND_EVIL self-correction"))
+                step["correction_reason"] = str(corrections[corr_idx].get("reason", "Self-correction"))
                 corr_idx += 1
             elif not step.get("correction_reason"):
-                step["correction_reason"] = "FIND_EVIL self-correction"
+                step["correction_reason"] = "Self-correction"
         step.setdefault("execution_time_ms", 12)
         await investigations_crud.create_step(session, incident_id, step)
 

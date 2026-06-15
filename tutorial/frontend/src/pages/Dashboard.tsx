@@ -113,7 +113,7 @@ export function Dashboard() {
             <KpiCard
               title="Lessons generated"
               value={metrics?.lessons ?? 0}
-              hint="FIND EVIL! curriculum artifacts"
+              hint="Generated curriculum artifacts"
               icon={BookOpen}
             />
           </>

@@ -9,7 +9,7 @@ export function Credentials() {
         <div>
           <h1 className="text-3xl font-bold text-indigo-50">Credential wallet</h1>
           <p className="mt-1 max-w-2xl text-indigo-200/85">
-            NFT-style attestations with filters, blockchain verify panel, and shareable proof links for hackathon judges.
+            NFT-style attestations with filters, blockchain verify panel, and shareable proof links for verifiable skill credentials.
           </p>
         </div>
         <Button asChild variant="outline" className="border-indigo-700 text-indigo-50">

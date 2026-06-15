@@ -141,7 +141,7 @@ async def start_investigation(
 
 @router.get("/{incident_id}/accuracy-report")
 async def get_accuracy_report(incident_id: uuid.UUID, db: DbSession, _: CurrentUser) -> dict:
-    """Return stored FIND EVIL! accuracy metadata."""
+    """Return stored accuracy metadata."""
     row = await incidents_crud.get_by_id(db, incident_id)
     if row is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Incident not found")
