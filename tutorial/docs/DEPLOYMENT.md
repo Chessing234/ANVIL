@@ -113,7 +113,8 @@ horizontal scaling, move the primary database to PostgreSQL and redesign bus fan
 ## CI / GitHub Actions
 
 - **Monorepo (`ANVIL/…`):** workflows live in `.github/workflows/tutorial-*.yml` and set
-  `working-directory: tutorial`.
+  `working-directory: tutorial`. **Tutorial CI** also runs when root `render.yaml`
+  changes. Re-run checks anytime: **Actions → Tutorial CI → Run workflow**.
 - **Standalone `tutorial/` repo:** workflows live in `tutorial/.github/workflows/` and assume the
   checkout root is this project (see `tutorial/.github/README.md`).
 

@@ -5,10 +5,20 @@ on:
     paths:
       - "tutorial/**"
       - ".github/workflows/tutorial-ci.yml"
+      - "render.yaml"
   pull_request:
     paths:
       - "tutorial/**"
       - ".github/workflows/tutorial-ci.yml"
+      - "render.yaml"
+  workflow_dispatch:
+
+concurrency:
+  group: tutorial-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 defaults:
   run:
@@ -52,7 +62,7 @@ jobs:
         working-directory: tutorial/frontend
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: "20"
           cache: npm
@@ -67,4 +77,6 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       - name: Docker Compose build
         working-directory: tutorial
-        run: docker compose build
+        env:
+          DOCKER_BUILDKIT: "1"
+        run: docker compose build --parallel
