@@ -1,0 +1,52 @@
+# Render Blueprint — deploy the TUTORIAL FastAPI API as a free Web Service.
+#
+# Apply from the Render Dashboard:
+#   Blueprints → New Blueprint Instance → connect this repo → select branch ``main``.
+#
+# After the first deploy, open the ``tutorial-api`` service → copy its public URL
+# (``https://tutorial-api-XXXX.onrender.com``) and wire GitHub Pages:
+#
+#   cd tutorial && ./scripts/gh-wire-pages-api.sh 'https://YOUR-SERVICE.onrender.com/api/v1' 'YOUR_API_KEY'
+#
+# The API key is auto-generated into ``TUTORIAL_API__DEMO_API_KEY`` (see Environment
+# tab). Set ``TUTORIAL_LLM__API_KEY`` in the dashboard for live LLM calls.
+#
+# Free tier: ephemeral disk, spin-down after inactivity. See:
+#   https://render.com/docs/free
+
+services:
+  - type: web
+    name: tutorial-api
+    runtime: docker
+    repo: https://github.com/Chessing234/ANVIL
+    branch: main
+    rootDir: tutorial
+    dockerfilePath: tutorial/docker/Dockerfile.api
+    dockerContext: tutorial
+    plan: free
+    region: oregon
+    healthCheckPath: /api/v1/system/health
+    buildFilter:
+      paths:
+        - tutorial/**
+    envVars:
+      - key: TUTORIAL_DATABASE__URL
+        value: sqlite:////app/data/tutorial.db
+      - key: TUTORIAL_ORCHESTRATION__PERSISTENCE_DB_PATH
+        value: /app/data/orchestration.db
+      - key: TUTORIAL_ORCHESTRATION__DEFENSE_CHECKPOINT_DB
+        value: /app/data/checkpoints_defense.sqlite
+      - key: TUTORIAL_ORCHESTRATION__TEACHING_CHECKPOINT_DB
+        value: /app/data/checkpoints_teaching.sqlite
+      - key: TUTORIAL_STATE_MACHINE__CHECKPOINT_PATH
+        value: /app/data/state_checkpoints.sqlite
+      - key: TUTORIAL_MCP__REGISTRY_CACHE_PATH
+        value: /app/data/mcp_registry.sqlite
+      - key: TUTORIAL_API__EVIDENCE_UPLOAD_DIR
+        value: /app/data/evidence_uploads
+      - key: TUTORIAL_API__CORS_ALLOW_ORIGINS
+        value: '["https://chessing234.github.io"]'
+      - key: TUTORIAL_API__DEMO_API_KEY
+        generateValue: true
+      - key: TUTORIAL_LLM__API_KEY
+        sync: false

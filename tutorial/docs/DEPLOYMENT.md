@@ -149,3 +149,5 @@ make ci-local
 GitHub Pages only hosts the **static SPA**. The API must run elsewhere (Docker
 on a VPS, tunnel, etc.). See [`GITHUB_PAGES.md`](./GITHUB_PAGES.md) and the
 workflow `.github/workflows/tutorial-github-pages.yml` at the monorepo root.
+
+**Render (free API):** see [`RENDER.md`](./RENDER.md) and root `render.yaml`.
