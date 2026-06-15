@@ -27,8 +27,10 @@ htmlcov/
 *.sqlite-shm
 *.sqlite-wal
 *.jsonl
-data/
-var/
+# Runtime data directories at the tutorial package root only (avoid ignoring
+# ``frontend/src/data/**`` used by the SPA).
+/data/
+/var/
 
 # Frontend
 frontend/node_modules/
