@@ -2,8 +2,13 @@
 
 from __future__ import annotations
 
+import uuid
 from dataclasses import dataclass
 from enum import StrEnum
+
+# Stable demo learner used by seed data, credentials API, and the frontend wallet.
+DEMO_STUDENT_ID = uuid.UUID("00000000-0000-4000-8000-000000000001")
+DEMO_STUDENT_EMAIL = "seed.student@tutorial.local"
 
 
 class AgentStatus(StrEnum):

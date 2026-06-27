@@ -10,6 +10,7 @@ from fastapi import APIRouter, HTTPException, status
 from api.converters import demo_credential_hash
 from api.dependencies import CurrentUser, DbSession
 from api.schemas import CredentialEntry, LessonRecommendation, StudentCreate, StudentDetail, StudentProgressItem, StudentResponse
+from config.constants import DEMO_STUDENT_EMAIL, DEMO_STUDENT_ID
 from database.crud import lessons as lessons_crud
 from database.crud import students as students_crud
 from database.models import StudentExperience
@@ -48,6 +49,17 @@ async def create_student(data: StudentCreate, db: DbSession, _: CurrentUser) -> 
             "skill_scores": data.skill_scores,
         },
     )
+    return _student_response(row)
+
+
+@router.get("/demo", response_model=StudentResponse)
+async def get_demo_student(db: DbSession, _: CurrentUser) -> StudentResponse:
+    """Return the stable demo learner (seeded on startup)."""
+    row = await students_crud.get_by_id(db, DEMO_STUDENT_ID)
+    if row is None:
+        row = await students_crud.get_by_email(db, DEMO_STUDENT_EMAIL)
+    if row is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Demo student not seeded")
     return _student_response(row)
 
 
@@ -95,16 +107,45 @@ async def get_recommendations(student_id: uuid.UUID, db: DbSession, _: CurrentUs
 
 @router.get("/{student_id}/credentials", response_model=list[CredentialEntry])
 async def get_credentials(student_id: uuid.UUID, db: DbSession, _: CurrentUser) -> list[CredentialEntry]:
-    """Return demo blockchain-style credentials."""
+    """Return blockchain-style credentials derived from completed lesson progress."""
     row = await students_crud.get_by_id(db, student_id)
     if row is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Student not found")
-    digest = demo_credential_hash(student_id)
-    return [
-        CredentialEntry(
-            credential_id=f"cred-{student_id}",
-            student_id=student_id,
-            issued_at=datetime.now(timezone.utc).isoformat(),
-            verification_hash=digest,
+
+    entries: list[CredentialEntry] = []
+    progress = await students_crud.list_progress(db, student_id)
+    for prog in progress:
+        if prog.completion_percentage < 100.0 and prog.completed_at is None:
+            continue
+        lesson = await lessons_crud.get_by_id(db, prog.lesson_id)
+        if lesson is None:
+            continue
+        digest = demo_credential_hash(uuid.uuid5(uuid.NAMESPACE_URL, f"{student_id}:{prog.lesson_id}"))
+        issued = prog.completed_at or datetime.now(timezone.utc)
+        entries.append(
+            CredentialEntry(
+                credential_id=f"cred-{prog.lesson_id}",
+                student_id=student_id,
+                lesson_id=prog.lesson_id,
+                concept_name=lesson.title,
+                score=round(float(prog.score) * 100.0, 1) if prog.score <= 1.0 else round(float(prog.score), 1),
+                category=str(lesson.difficulty.value),
+                issued_at=issued.isoformat(),
+                verification_hash=digest,
+            ),
         )
-    ]
+
+    if not entries:
+        digest = demo_credential_hash(student_id)
+        entries.append(
+            CredentialEntry(
+                credential_id=f"cred-{student_id}",
+                student_id=student_id,
+                concept_name="SOC Foundations",
+                score=100.0,
+                category="ops",
+                issued_at=datetime.now(timezone.utc).isoformat(),
+                verification_hash=digest,
+            ),
+        )
+    return entries

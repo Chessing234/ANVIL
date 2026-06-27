@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import operator
 from collections.abc import Awaitable, Callable
 from datetime import datetime, timezone
@@ -18,7 +19,11 @@ from shared.models import Evidence, Incident, InvestigationStep
 
 logger = structlog.get_logger(__name__)
 
-_PLACEHOLDER_HASH = "a" * 64
+
+def _evidence_hash(incident_id: str, file_path: str) -> str:
+    """Deterministic SHA-256 for synthesized evidence artifacts."""
+    payload = f"{incident_id}:{file_path}:tutorial-evidence".encode()
+    return hashlib.sha256(payload).hexdigest()
 
 
 class DefenseState(TypedDict, total=False):
@@ -143,7 +148,7 @@ async def collect_evidence(state: DefenseState) -> dict[str, Any] | Command:
             incident_id=incident.id,
             type="memory_dump",
             file_path=f"/evidence/{incident.id}/mem.dmp",
-            hash_sha256=_PLACEHOLDER_HASH,
+            hash_sha256=_evidence_hash(str(incident.id), f"/evidence/{incident.id}/mem.dmp"),
             metadata={"chain_of_custody": "signed"},
             collected_by="defense_evidence",
         )

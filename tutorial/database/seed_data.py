@@ -8,6 +8,7 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from config.constants import DEMO_STUDENT_EMAIL, DEMO_STUDENT_ID
 from database.models import (
     Agent,
     AgentStatus,
@@ -187,14 +188,13 @@ async def seed_database(session: AsyncSession) -> dict[str, int]:
             session.add(Agent(id=uuid.uuid4(), **cfg))
             counts["agents"] += 1
 
-    sample_email = "seed.student@tutorial.local"
-    existing = await session.scalar(select(Student).where(Student.email == sample_email))
+    existing = await session.scalar(select(Student).where(Student.email == DEMO_STUDENT_EMAIL))
     if existing is None:
         session.add(
             Student(
-                id=uuid.uuid4(),
+                id=DEMO_STUDENT_ID,
                 name="Seed Student",
-                email=sample_email,
+                email=DEMO_STUDENT_EMAIL,
                 experience_level=StudentExperience.INTERMEDIATE,
                 preferred_learning_style="visual",
                 skill_scores={"dns": 0.8, "tcpip": 0.4, "malware": 0.3},

@@ -15,6 +15,7 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.types import Command
 
 from config.constants import LessonDifficulty
+from integrations.llm_client import complete_text
 from shared.models import Lesson, StudentProfile
 
 logger = structlog.get_logger(__name__)
@@ -99,10 +100,22 @@ async def generate_narrative(state: TeachingState) -> dict[str, Any] | Command:
 
     try:
         steps = state.get("investigation_steps", [])
-        story = (
-            "You are the lead detective. Each clue below came from the live SOC investigation: "
-            + "; ".join(f"{idx}:{step.get('action_taken','')}" for idx, step in enumerate(steps))
+        step_summary = "; ".join(
+            f"{idx}:{step.get('action_taken', '')}" for idx, step in enumerate(steps)
         )
+        fallback = (
+            "You are the lead detective. Each clue below came from the live SOC investigation: "
+            + step_summary
+        )
+        llm_text = await complete_text(
+            f"Write a 2-paragraph detective-style cybersecurity lesson intro based on these investigation steps: {step_summary}",
+            system_prompt=(
+                "You are a STEM educator turning SOC incidents into engaging lessons. "
+                "Keep language accessible, mention specific tools or TTPs when present, no markdown."
+            ),
+            max_tokens=400,
+        )
+        story = llm_text if llm_text else fallback
         return {"narrative": story, "current_step": "generate_narrative"}
     except Exception as exc:  # pragma: no cover - defensive
         return _to_teaching_error(state, "generate_narrative", exc)
@@ -157,9 +170,17 @@ async def assemble_lesson(state: TeachingState) -> dict[str, Any] | Command:
         incident_uuid = UUID(str(state["incident_id"]))
         difficulty_raw = state.get("difficulty_assessment", LessonDifficulty.BEGINNER.value)
         difficulty = LessonDifficulty(str(difficulty_raw))
+        narrative = state.get("narrative", "")
+        title_fallback = "Detective Desk: Live SOC Case"
+        title = await complete_text(
+            f"Suggest a short lesson title (max 8 words) for this cybersecurity narrative: {narrative[:500]}",
+            system_prompt="Reply with only the title, no quotes.",
+            temperature=0.3,
+            max_tokens=32,
+        )
         lesson = Lesson(
             incident_id=incident_uuid,
-            title="Detective Desk: Live SOC Case",
+            title=(title or title_fallback).strip().strip('"').strip("'")[:512],
             narrative=state.get("narrative", ""),
             interactive_steps=[
                 {"kind": "sandbox", "config": state.get("interactive_sandbox", {})},

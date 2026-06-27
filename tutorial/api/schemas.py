@@ -255,6 +255,10 @@ class CredentialEntry(BaseModel):
     issued_at: str
     chain: str = Field(default="tutorial-demo")
     verification_hash: str
+    lesson_id: uuid.UUID | None = None
+    concept_name: str | None = None
+    score: float | None = None
+    category: str | None = None
 
 
 class AgentStatusResponse(BaseModel):

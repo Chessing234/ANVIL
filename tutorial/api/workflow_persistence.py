@@ -105,10 +105,6 @@ async def sync_defense_and_teach_post_submit(
 
     steps_raw = list(latest.get("investigation_steps") or [])
     corrections: list[dict[str, Any]] = list(latest.get("self_corrections") or [])
-    if len(steps_raw) > 3:
-        steps_raw = steps_raw[-3:]
-        if corrections:
-            corrections = corrections[-1:]
 
     corr_idx = 0
     for raw in steps_raw:

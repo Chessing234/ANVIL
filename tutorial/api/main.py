@@ -21,6 +21,8 @@ from api.routers import agents, incidents, investigations, knowledge, lessons, s
 from config.settings import get_settings
 from core.message_bus import get_message_bus
 from database.connection import DatabaseManager
+from database.seed_data import seed_database
+from database.seed_rich_demo import seed_rich_demo
 from orchestration.coordinator import TutorialCoordinator
 from tutorial.health_check import HealthChecker
 
@@ -51,6 +53,9 @@ def create_app() -> FastAPI:
         )
         await db_manager.initialize()
         app.state.db_manager = db_manager
+        async with db_manager.session() as session:
+            await seed_database(session)
+            await seed_rich_demo(session)
         Path(settings.api.evidence_upload_dir).mkdir(parents=True, exist_ok=True)
 
         bus = await get_message_bus(

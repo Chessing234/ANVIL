@@ -16,6 +16,7 @@ from config.settings import Settings, get_settings
 from core.message_bus import MessageBus, get_message_bus
 from database.connection import DatabaseManager
 from database.seed_data import seed_database
+from database.seed_rich_demo import seed_rich_demo
 from orchestration.coordinator import TutorialCoordinator
 
 logger = structlog.get_logger(__name__)
@@ -63,6 +64,7 @@ class Bootstrap:
         try:
             async with mgr.session() as session:
                 await seed_database(session)
+                await seed_rich_demo(session)
         finally:
             await mgr.close()
 

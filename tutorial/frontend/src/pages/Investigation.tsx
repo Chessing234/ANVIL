@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import * as incidentsApi from "@/api/incidents";
 import { wsClient } from "@/api/websocket";
@@ -76,6 +76,10 @@ export function Investigation() {
   }, [id, load]);
 
   const headerTitle = useMemo(() => detail?.incident.title ?? "Investigation", [detail]);
+  const latestLesson = useMemo(() => {
+    const rows = detail?.lessons;
+    return rows && rows.length > 0 ? rows[rows.length - 1] : null;
+  }, [detail]);
 
   if (!id) {
     return (
@@ -96,6 +100,11 @@ export function Investigation() {
         </div>
         <div className="flex flex-wrap gap-2">
           <Badge variant="info">incident {id}</Badge>
+          {latestLesson ? (
+            <Button asChild size="sm" className="bg-emerald-600 hover:bg-emerald-500">
+              <Link to={`/learn/${latestLesson.id}`}>Open generated lesson</Link>
+            </Button>
+          ) : null}
           <Button size="sm" variant="secondary" onClick={() => void load()} disabled={loading}>
             Refresh
           </Button>
@@ -174,6 +183,23 @@ export function Investigation() {
                 <AccuracyReport report={accuracy} />
               </TabsContent>
             </Tabs>
+            {detail.lessons.length > 0 ? (
+              <Card className="border-emerald-800/50 bg-emerald-950/20">
+                <CardHeader>
+                  <CardTitle className="text-base text-emerald-100">Teaching pipeline</CardTitle>
+                  <p className="text-xs text-emerald-200/70">
+                    Defense complete — {detail.lessons.length} lesson(s) generated from this investigation.
+                  </p>
+                </CardHeader>
+                <CardContent className="flex flex-wrap gap-2">
+                  {detail.lessons.map((l) => (
+                    <Button key={l.id} asChild size="sm" variant="secondary">
+                      <Link to={`/learn/${l.id}`}>{l.title}</Link>
+                    </Button>
+                  ))}
+                </CardContent>
+              </Card>
+            ) : null}
             <Terminal lines={lines} />
           </div>
         </div>

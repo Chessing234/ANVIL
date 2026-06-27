@@ -25,6 +25,8 @@ export interface LessonSummary {
   progressPercent?: number;
   trending?: boolean;
   recommended?: boolean;
+  /** True when loaded from the live lessons API (post-investigation). */
+  fromSoc?: boolean;
 }
 
 export type LessonBlockKind = "narrative" | "choice" | "puzzle" | "discovery" | "reflection";

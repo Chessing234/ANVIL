@@ -30,6 +30,11 @@ async def get_by_id(session: AsyncSession, student_id: uuid.UUID) -> Student | N
     return await session.get(Student, student_id)
 
 
+async def get_by_email(session: AsyncSession, email: str) -> Student | None:
+    stmt = select(Student).where(Student.email == email).limit(1)
+    return await session.scalar(stmt)
+
+
 async def list_progress(session: AsyncSession, student_id: uuid.UUID) -> list[StudentProgress]:
     """Return all progress rows for a student."""
     stmt = (

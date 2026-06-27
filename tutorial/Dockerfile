@@ -1,3 +1,4 @@
+# Render / PaaS entrypoint (rootDir = tutorial/). Same as docker/Dockerfile.api.
 # syntax=docker/dockerfile:1
 FROM python:3.11-slim-bookworm AS builder
 WORKDIR /app
@@ -55,5 +56,4 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD python -c "import os,urllib.request; p=os.environ.get('PORT','8000'); urllib.request.urlopen(f'http://127.0.0.1:{p}/api/v1/system/health')"
 
-# Render (and some PaaS) inject PORT; Fly defaults to 8000 when unset.
 CMD ["sh", "-c", "exec python main.py --mode api --host 0.0.0.0 --port ${PORT:-8000} --init-db --seed"]

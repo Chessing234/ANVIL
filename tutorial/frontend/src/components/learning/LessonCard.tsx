@@ -24,6 +24,7 @@ export function LessonCard({ lesson }: LessonCardProps) {
           <DifficultyBadge level={lesson.difficulty} />
           {lesson.trending ? <Badge className="bg-rose-500/20 text-rose-100">Trending</Badge> : null}
           {lesson.recommended ? <Badge className="bg-emerald-500/20 text-emerald-100">For you</Badge> : null}
+          {lesson.fromSoc ? <Badge className="bg-cyan-500/20 text-cyan-100">From SOC</Badge> : null}
         </div>
         <h3 className="text-lg font-semibold leading-snug text-indigo-50">{lesson.title}</h3>
         <p className="text-sm text-indigo-200/80">{lesson.subtitle}</p>

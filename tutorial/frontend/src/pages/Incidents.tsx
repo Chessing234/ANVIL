@@ -1,5 +1,6 @@
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { IncidentList } from "@/components/IncidentList";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -10,6 +11,7 @@ import * as incidentsApi from "@/api/incidents";
 import { useSocShell } from "@/context/soc-shell";
 
 export function Incidents() {
+  const navigate = useNavigate();
   const { incidents, loading, error, refresh } = useSocShell();
   const [selected, setSelected] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
@@ -24,6 +26,7 @@ export function Incidents() {
   const startOne = async (id: string) => {
     await incidentsApi.startInvestigation(id);
     await refresh();
+    navigate(`/investigations/${id}`);
   };
 
   const bulkInvestigate = async () => {
